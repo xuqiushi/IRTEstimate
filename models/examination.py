@@ -10,3 +10,5 @@ class Examination(object):
     ):
         self.student_class = student_class
         self.exam_paper = exam_paper
+
+        

@@ -15,6 +15,7 @@ class Question(object):
 
 class ExamPaperBase(object):
     exam_type = VIRTUAL
+    effective_question_index = []
 
 
 class VirtualExamPaper(ExamPaperBase):

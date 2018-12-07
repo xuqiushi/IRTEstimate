@@ -48,10 +48,13 @@ class VirtualStudent(StudentBase):
             + random.choice(MOCK_SECOND_NAME)
         )
         self.student_id: str = str(uuid.uuid1())
-        self.score_list: list = []
+        self.score_list: ndarray = np.array([])
         self.effective_score_index: list = []
 
     def update_score_list(self, question_quantity):
+        """
+        录入本次考试的成绩
+        """
         self.score_list = np.random.randint(0, 2, size=(1, question_quantity))
 
 

@@ -10,7 +10,19 @@ def generate_mock_exam(mock_exam_length):
     return VirtualExamPaper(mock_exam_length)
 
 
+def input_student_score(exist_virtual_class: VirtualStudentClass):
+    for student in exist_virtual_class.student_list:
+        student.update_score_list(MOCK_EXAM_LENGTH)
+
+
 if __name__ == "__main__":
+    # 创建班级
     virtual_class = generate_mock_class(MOCK_CLASS_SIZE)
+    # 创建考试试卷
     virtual_exam = generate_mock_exam(MOCK_EXAM_LENGTH)
+    # 录入成绩
+    input_student_score(virtual_class)
+    # 创建本次考试
     examination = Examination(virtual_class, virtual_exam)
+
+    test = examination.score_transcript

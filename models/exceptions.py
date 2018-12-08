@@ -1,0 +1,2 @@
+class QuestionTypeSupportError(Exception):
+    pass

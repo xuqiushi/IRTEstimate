@@ -3,13 +3,24 @@ import uuid
 import json
 import numpy as np
 from numpy import ndarray
-from models.consts import VIRTUAL, REAL, MOCK_FIRST_NAME, MOCK_SECOND_NAME
+from models.consts import (
+    VIRTUAL,
+    REAL,
+    MOCK_FIRST_NAME,
+    MOCK_SECOND_NAME,
+    STUDENT_FULL_SCORE,
+    STUDENT_NORMAL_SCORE,
+    STUDENT_ZERO_SCORE,
+)
+from models.exam_paper import VirtualExamPaper
+from models.exceptions import QuestionTypeSupportError
 
 
 class StudentBase(object):
     student_type: str = VIRTUAL
     effective_score_index: list = []
     ability_of_student: float = 0
+    student_score_state: str = STUDENT_NORMAL_SCORE  # 默认分数状态
 
     def __str__(self) -> str:
         print_dict = {
@@ -50,12 +61,32 @@ class VirtualStudent(StudentBase):
         self.student_id: str = str(uuid.uuid1())
         self.score_list: ndarray = np.array([])
         self.effective_score_index: list = []
+        self.student_score_state = self.student_score_state
 
-    def update_score_list(self, question_quantity):
+    def update_score_list(self, exam_paper: VirtualExamPaper):
         """
         录入本次考试的成绩
         """
-        self.score_list = np.random.randint(0, 2, size=(1, question_quantity))
+        self.score_list = np.zeros(len(exam_paper.question_list))
+        for question_index, question in enumerate(exam_paper.question_list):
+            if question.question_type is not "choice":
+                raise QuestionTypeSupportError("仅支持选择题")
+            self.score_list[question_index] = self._random_score_generator(
+                question.question_type, question.question_full_score
+            )
+        self._update_student_state(exam_paper.full_score_list)
+
+    def _update_student_state(self, full_score_list):
+        if (self.score_list == full_score_list).all():
+            self.student_score_state = STUDENT_FULL_SCORE
+        elif (self.score_list == 0).all():
+            self.student_score_state = STUDENT_ZERO_SCORE
+
+    @classmethod
+    def _random_score_generator(cls, question_type, full_score):
+        # 仅支持选择题
+        if question_type is "choice":
+            return random.choice([0, full_score])
 
 
 class RealStudent(StudentBase):

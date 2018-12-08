@@ -1,4 +1,6 @@
+import numpy as np
 from models.consts import CHOICE, VIRTUAL, REAL
+from cached_property import cached_property
 
 
 class Question(object):
@@ -16,6 +18,14 @@ class Question(object):
 class ExamPaperBase(object):
     exam_type = VIRTUAL
     effective_question_index = []
+    question_list = []
+
+    def add_questions(self, question: Question):
+        self.question_list.append(question)
+
+    @cached_property
+    def full_score_list(self):
+        return np.array([question.question_full_score for question in self.question_list])
 
 
 class VirtualExamPaper(ExamPaperBase):
@@ -26,7 +36,7 @@ class VirtualExamPaper(ExamPaperBase):
     def __init__(self, exam_length: int):
         self.question_list = []
         for _ in range(exam_length):
-            self.question_list.append(Question(CHOICE, 5))
+            self.add_questions(Question(CHOICE, 5))
 
 
 class RealExamPaper(ExamPaperBase):

@@ -1,28 +1,25 @@
 from consts import MOCK_CLASS_SIZE, MOCK_EXAM_LENGTH
-from models import VirtualStudentClass, VirtualExamPaper, Examination
-
-
-def generate_mock_class(mock_class_size):
-    return VirtualStudentClass(mock_class_size)
-
-
-def generate_mock_exam(mock_exam_length):
-    return VirtualExamPaper(mock_exam_length)
-
-
-def input_student_score(exist_virtual_class: VirtualStudentClass, exam_paper: VirtualExamPaper):
-    for student in exist_virtual_class.student_list:
-        student.update_score_list(exam_paper)
-
+from models import StudentClass, ExamPaper, ScoreTable, Examination
+from data_operator.data_prepair import VirtualBaseData
 
 if __name__ == "__main__":
-    # 创建班级
-    virtual_class = generate_mock_class(MOCK_CLASS_SIZE)
-    # 创建考试试卷
-    virtual_exam = generate_mock_exam(MOCK_EXAM_LENGTH)
-    # 录入成绩
-    input_student_score(virtual_class, virtual_exam)
-    # 创建本次考试
-    examination = Examination(virtual_class, virtual_exam)
 
-    test = examination.score_transcript
+    # 生成mock数据
+    test_data_obj = VirtualBaseData(MOCK_CLASS_SIZE, MOCK_EXAM_LENGTH)
+
+    # 生成班级
+
+    student_class = StudentClass(test_data_obj.virtual_student_info_list)
+
+    # 生成试卷
+
+    exam_paper = ExamPaper(test_data_obj.virtual_exam_paper_info_list)
+
+    # 生成成绩信息
+
+    score_table = ScoreTable(test_data_obj.virtual_exam_paper_info_array)
+
+    # 创建本次考试
+    examination = Examination(student_class, exam_paper, score_table)
+
+    # test = examination.score_transcript

@@ -72,9 +72,9 @@ class IRTEstimate(object):
                 )
             )
         ) + (1 - self.score_array) * (
-            1
-            - np.log(
+            np.log(
                 1
+                - 1
                 / (
                     1
                     + np.power(
@@ -88,4 +88,4 @@ class IRTEstimate(object):
                 )
             )
         )
-        return log_p
+        return np.sum(log_p)

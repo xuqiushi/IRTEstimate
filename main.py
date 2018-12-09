@@ -22,3 +22,4 @@ if __name__ == "__main__":
     # 估计一下试试
     test_estimate = IRTEstimate(examination.score_array_for_estimate)
     print(test_estimate.question_initial_values)
+    print(test_estimate.p_calculate())

@@ -1,5 +1,6 @@
 import numpy as np
 from cached_property import cached_property
+from data_operator.consts import D
 
 
 class IRTEstimate(object):
@@ -10,6 +11,8 @@ class IRTEstimate(object):
     def __init__(self, score_array):
         self.score_array = score_array
         self.score_array[self.score_array > 0] = 1
+        self.student_abilities = self.student_initial_values
+        self.question_difficulties = self.question_initial_values
 
     @cached_property
     def student_initial_values(self):
@@ -32,3 +35,57 @@ class IRTEstimate(object):
             - question_right_count_list
         )
         return np.log(question_wrong_count_list / question_right_count_list)
+
+    @property
+    def student_abilities_matrix(self):
+        return np.tile(
+            self.student_abilities, (self.question_difficulties.shape[0], 1)
+        ).T
+
+    @property
+    def question_abilities_matrix(self):
+        return np.tile(self.question_difficulties, (self.student_abilities.shape[0], 1))
+
+    @cached_property
+    def e_matrix(self):
+        return (
+            np.ones(
+                (self.student_abilities.shape[0], self.question_difficulties.shape[0])
+            )
+            * np.e
+        )
+
+    def p_calculate(self):
+        log_p = self.score_array * (
+            np.log(
+                1
+                / (
+                    1
+                    + np.power(
+                        self.e_matrix,
+                        -D
+                        * (
+                            self.student_abilities_matrix
+                            - self.question_abilities_matrix
+                        ),
+                    )
+                )
+            )
+        ) + (1 - self.score_array) * (
+            1
+            - np.log(
+                1
+                / (
+                    1
+                    + np.power(
+                        self.e_matrix,
+                        -D
+                        * (
+                            self.student_abilities_matrix
+                            - self.question_abilities_matrix
+                        ),
+                    )
+                )
+            )
+        )
+        return log_p

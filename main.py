@@ -1,6 +1,6 @@
 from consts import MOCK_CLASS_SIZE, MOCK_EXAM_LENGTH
 from models import ScoreTable, Examination
-from data_operator.data_prepair import VirtualBaseData
+from data_operator import VirtualBaseData, IRTEstimate
 
 if __name__ == "__main__":
 
@@ -16,4 +16,9 @@ if __name__ == "__main__":
     # 创建本次考试
     examination = Examination(score_table)
 
-    # test = examination.score_transcript
+    # 筛选一下零分和满分
+    examination.update_state_at_first()
+
+    # 估计一下试试
+    test_estimate = IRTEstimate(examination.score_array_for_estimate)
+    print(test_estimate.question_initial_values)

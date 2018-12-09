@@ -15,14 +15,12 @@ class Student(object):
     ability_of_student: float = 0
     student_score_state: str = STUDENT_NORMAL_SCORE  # 默认分数状态
 
-    def __init__(self, student_name, student_id, student_type):
+    def __init__(self, student_name, student_id):
         self.student_name = student_name
         self.student_id = student_id
-        self.student_type: str = student_type
 
     def __str__(self) -> str:
         print_dict = {
-            "student_type": self.student_type,
             "effective_score_index": self.effective_score_index,
         }
         print_dict.update(self.__dict__)

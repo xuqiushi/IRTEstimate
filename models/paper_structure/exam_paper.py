@@ -6,6 +6,6 @@ class ExamPaper(object):
 
     def __init__(self, question_info_list):
         self.question_list = [
-            Question(info["question_type"], info["question_full_score"])
-            for info in question_info_list
+            Question(question[1], question[2])
+            for question in question_info_list
         ]

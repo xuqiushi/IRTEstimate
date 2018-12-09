@@ -1,15 +1,13 @@
-import numpy as np
 from models import StudentClass, ExamPaper, ScoreTable
-from cached_property import cached_property
+import numpy as np
 
 
 class Examination(object):
     def __init__(
         self,
-        student_class: StudentClass,
-        exam_paper: ExamPaper,
-        score_table: ScoreTable,
+        base_score_table: ScoreTable,
     ):
-        self.student_class = student_class
-        self.exam_paper = exam_paper
-        self.score_table = score_table
+        self.base_score_table = base_score_table
+        self.student_class = StudentClass(self.base_score_table.student_info_list)
+        self.exam_paper = ExamPaper(self.base_score_table.question_info_list)
+        self.score_array = self.base_score_table.score_info_array.astype(np.int)

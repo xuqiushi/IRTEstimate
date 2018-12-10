@@ -89,3 +89,15 @@ class IRTEstimate(object):
             )
         )
         return np.sum(log_p)
+
+    def ability_jacobi_matrix_calculate(self):
+        pass
+
+    def ability_hessian_matrix_calculate(self):
+        pass
+
+    def difficulty_jacobi_matrix_calculate(self):
+        pass
+
+    def difficulty_hessian_matrix_calculate(self):
+        pass

@@ -108,7 +108,38 @@ class IRTEstimate(object):
         return np.sum(jacobi_calculate_matrix, axis=1)
 
     def ability_hessian_matrix_calculate(self):
-        pass
+        hessian_calculate_matrix = -np.power(D, 2) * self.score_array * (
+            np.power(
+                self.e_matrix,
+                D * (self.student_abilities_matrix - self.question_difficulties_matrix),
+            )
+        ) / np.power(
+            1
+            + np.power(
+                self.e_matrix,
+                D * (self.student_abilities_matrix - self.question_difficulties_matrix),
+            ),
+            2,
+        ) - np.power(
+            D, 2
+        ) * (
+            1 - self.score_array
+        ) * (
+            np.power(
+                self.e_matrix,
+                (-D)
+                * (self.student_abilities_matrix - self.question_difficulties_matrix),
+            )
+        ) / np.power(
+            1
+            + np.power(
+                self.e_matrix,
+                (-D)
+                * (self.student_abilities_matrix - self.question_difficulties_matrix),
+            ),
+            2,
+        )
+        return np.diag(np.sum(hessian_calculate_matrix, axis=1))
 
     def difficulty_jacobi_matrix_calculate(self):
         pass

@@ -90,7 +90,23 @@ class IRTEstimate(object):
         )
         return np.sum(log_p)
 
+    @property
     def ability_jacobi_matrix_calculate(self):
+        return np.sum(self._jacobi_matrix_calculate(), axis=1)
+
+    @property
+    def ability_hessian_matrix_calculate(self):
+        return np.diag(np.sum(self._hessian_matrix_calculate(), axis=1))
+
+    @property
+    def difficulty_jacobi_matrix_calculate(self):
+        return np.sum(-self._jacobi_matrix_calculate(), axis=1)
+
+    @property
+    def difficulty_hessian_matrix_calculate(self):
+        return np.diag(np.sum(-self._hessian_matrix_calculate(), axis=1))
+
+    def _jacobi_matrix_calculate(self):
         jacobi_calculate_matrix = self.score_array / (
             1
             + np.power(
@@ -105,9 +121,9 @@ class IRTEstimate(object):
                 * (self.student_abilities_matrix - self.question_difficulties_matrix),
             )
         )
-        return np.sum(jacobi_calculate_matrix, axis=1)
+        return jacobi_calculate_matrix
 
-    def ability_hessian_matrix_calculate(self):
+    def _hessian_matrix_calculate(self):
         hessian_calculate_matrix = -np.power(D, 2) * self.score_array * (
             np.power(
                 self.e_matrix,
@@ -139,10 +155,4 @@ class IRTEstimate(object):
             ),
             2,
         )
-        return np.diag(np.sum(hessian_calculate_matrix, axis=1))
-
-    def difficulty_jacobi_matrix_calculate(self):
-        pass
-
-    def difficulty_hessian_matrix_calculate(self):
-        pass
+        return hessian_calculate_matrix

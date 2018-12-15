@@ -23,3 +23,7 @@ if __name__ == "__main__":
     test_estimate = IRTEstimate(examination.score_array_for_estimate)
     print(test_estimate.question_initial_values)
     print(test_estimate.p_calculate())
+    print(test_estimate.ability_jacobi_matrix_calculate)
+    print(test_estimate.ability_hessian_matrix_calculate)
+    print(test_estimate.difficulty_jacobi_matrix_calculate)
+    print(test_estimate.difficulty_hessian_matrix_calculate)

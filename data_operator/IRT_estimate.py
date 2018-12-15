@@ -43,7 +43,7 @@ class IRTEstimate(object):
         ).T
 
     @property
-    def question_abilities_matrix(self):
+    def question_difficulties_matrix(self):
         return np.tile(self.question_difficulties, (self.student_abilities.shape[0], 1))
 
     @cached_property
@@ -66,7 +66,7 @@ class IRTEstimate(object):
                         -D
                         * (
                             self.student_abilities_matrix
-                            - self.question_abilities_matrix
+                            - self.question_difficulties_matrix
                         ),
                     )
                 )
@@ -82,7 +82,7 @@ class IRTEstimate(object):
                         -D
                         * (
                             self.student_abilities_matrix
-                            - self.question_abilities_matrix
+                            - self.question_difficulties_matrix
                         ),
                     )
                 )
@@ -91,7 +91,21 @@ class IRTEstimate(object):
         return np.sum(log_p)
 
     def ability_jacobi_matrix_calculate(self):
-        pass
+        jacobi_calculate_matrix = self.score_array / (
+            1
+            + np.power(
+                self.e_matrix,
+                D * (self.student_abilities_matrix - self.question_difficulties_matrix),
+            )
+        ) + (1 - self.score_array) * (-D) / (
+            1
+            + np.power(
+                self.e_matrix,
+                (-D)
+                * (self.student_abilities_matrix - self.question_difficulties_matrix),
+            )
+        )
+        return np.sum(jacobi_calculate_matrix, axis=1)
 
     def ability_hessian_matrix_calculate(self):
         pass

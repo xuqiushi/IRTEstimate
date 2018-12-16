@@ -139,7 +139,7 @@ class IRTEstimate(object):
                 ),
                 axis=0,
             )
-        )
+        ).T
 
     def difficulty_hessian_matrix_calculate(
         self, updated_difficulties=np.array([False])
@@ -350,6 +350,7 @@ class IRTEstimate(object):
                     difficulties_difference.T * updated_decline_size
             )
             self.question_difficulties = np.array(updated_question_difficulties).flatten()
+            print(np.sum(np.power(self.difficulty_jacobi_matrix_calculate(), 2)), self.p_calculate())
 
     def merge_approach(self):
         while np.power(np.e, self.p_calculate()) < np.power(P_AVERAGE_THETA, self.student_abilities.shape[0] * self.question_difficulties.shape[0]):

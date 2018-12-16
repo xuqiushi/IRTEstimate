@@ -27,4 +27,4 @@ if __name__ == "__main__":
     # print(test_estimate.ability_hessian_matrix_calculate())
     # print(test_estimate.difficulty_jacobi_matrix_calculate())
     # print(test_estimate.difficulty_hessian_matrix_calculate())
-    test_estimate.ability_approach()
+    test_estimate.difficulty_approach()

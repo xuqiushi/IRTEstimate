@@ -20,7 +20,6 @@ except ImportError:
         "\n or use merge_approach"
     )
     raise ValueError("plt 引入错误")
-import matplotlib
 
 
 class IRTEstimate(object):

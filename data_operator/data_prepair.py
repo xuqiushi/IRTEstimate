@@ -3,6 +3,7 @@ import uuid
 import numpy as np
 from cached_property import cached_property
 from models.consts import VIRTUAL, MOCK_FIRST_NAME, MOCK_SECOND_NAME
+from data_operator.consts import D
 
 
 class BaseDataInfo(object):
@@ -15,6 +16,14 @@ class VirtualBaseData(BaseDataInfo):
     def __init__(self, student_num, exam_length):
         self.student_num = student_num
         self.exam_length = exam_length
+
+    @cached_property
+    def virtual_student_abilities_list(self):
+        return (np.random.random_sample(self.student_num) - 0.5) * 6
+
+    @cached_property
+    def virtual_question_difficulties_list(self):
+        return (np.random.random_sample(self.exam_length) - 0.5) * 6
 
     @cached_property
     def virtual_student_info_list(self):
@@ -58,6 +67,11 @@ class VirtualBaseData(BaseDataInfo):
         ]
         return np.array(question_info_list)
 
+    @classmethod
+    def _random_func(cls, ability, difficult):
+        p = 1 / (1 + np.power(np.e, -D * (ability - difficult)))
+        return np.random.choice([5, 0], p=[p, 1 - p])
+
     @cached_property
     def virtual_exam_people_score_info_array(self):
         name_list = ["student_name"] + [
@@ -67,10 +81,18 @@ class VirtualBaseData(BaseDataInfo):
             student["student_id"] for student in self.virtual_student_info_list
         ]
         question_index_list = [
-            question["question_index"]
-            for question in self.virtual_exam_paper_info_list
+            question["question_index"] for question in self.virtual_exam_paper_info_list
         ]
-        score_matrix = np.random.choice([0, 5], (self.student_num, self.exam_length))
+        abilities_matrix = np.tile(
+            np.array(self.virtual_student_abilities_list),
+            (len(self.virtual_question_difficulties_list), 1),
+        ).T
+        difficulties_matrix = np.tile(
+            np.array(self.virtual_question_difficulties_list),
+            (len(self.virtual_student_abilities_list), 1),
+        )
+        generate_random_func = np.frompyfunc(self._random_func, 2, 1)
+        score_matrix = generate_random_func(abilities_matrix, difficulties_matrix)
         return np.hstack(
             (
                 np.array(name_list).reshape(len(name_list), 1),

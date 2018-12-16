@@ -117,7 +117,7 @@ class IRTEstimate(object):
                 self._jacobi_matrix_calculate(updated_abilities=updated_abilities),
                 axis=1,
             )
-        ).I
+        ).T
 
     def ability_hessian_matrix_calculate(self, updated_abilities=np.array([False])):
         return np.matrix(
@@ -166,7 +166,7 @@ class IRTEstimate(object):
         question_difficulties_matrix = self.generate_question_difficulties_matrix(
             updated_difficulties=updated_difficulties
         )
-        jacobi_calculate_matrix = self.score_array / (
+        jacobi_calculate_matrix = self.score_array * D / (
             1
             + np.power(
                 self.e_matrix,

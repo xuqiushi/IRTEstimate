@@ -1,6 +1,7 @@
 from consts import MOCK_CLASS_SIZE, MOCK_EXAM_LENGTH
 from models import ScoreTable, Examination
 from data_operator import VirtualBaseData, IRTEstimate
+import numpy as np
 
 if __name__ == "__main__":
 
@@ -20,11 +21,9 @@ if __name__ == "__main__":
     examination.update_state_at_first()
 
     # 估计一下试试
-    test_estimate = IRTEstimate(examination.score_array_for_estimate)
-    print(test_estimate.question_initial_values)
-    # print(test_estimate.p_calculate())
-    # print(test_estimate.ability_jacobi_matrix_calculate())
-    # print(test_estimate.ability_hessian_matrix_calculate())
-    # print(test_estimate.difficulty_jacobi_matrix_calculate())
-    # print(test_estimate.difficulty_hessian_matrix_calculate())
-    test_estimate.difficulty_approach()
+    test_estimate = IRTEstimate(
+        examination.score_array_for_estimate,
+        np.array(test_data_obj.virtual_student_abilities_list)[examination.effective_student_index],
+        np.array(test_data_obj.virtual_question_difficulties_list)[examination.effective_question_index],
+    )
+    test_estimate.merge_approach()

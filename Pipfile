@@ -5,10 +5,12 @@ verify_ssl = true
 
 [dev-packages]
 numpy = "*"
+matplotlib = "*"
 
 [packages]
 numpy = "*"
 cached-property = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.6"
